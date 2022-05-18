@@ -6,6 +6,7 @@ module.exports = gql`
     isPasswordResetValid(token: String): Boolean
     isLoggedIn:Boolean
     sensorData: Sensors
+    records: [Record]
   
 
   }

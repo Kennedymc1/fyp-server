@@ -1,4 +1,7 @@
 const SensorsModel = require("../models/SensorsModel")
+const RecordsModel = require("../models/RecordsModel")
+const { model } = require("mongoose")
+
 
 const request = (app) => {
     /**
@@ -53,6 +56,22 @@ const request = (app) => {
 
             console.log({ t: value })
         }
+
+        //all
+        if (data.indexOf("all:") > -1) {
+            let value = data.replace("all:", "")
+
+            while(value.indexOf("%20") >= 0){
+                value = value.replace("%20"," ")
+            }
+
+            const model = new RecordsModel()
+            model.data = value
+            
+            await model.save()
+            console.log({ all: value })
+        }
+
         res.send(true)
 
     })
