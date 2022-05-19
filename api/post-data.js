@@ -1,6 +1,9 @@
 const SensorsModel = require("../models/SensorsModel")
 const RecordsModel = require("../models/RecordsModel")
-const { model } = require("mongoose")
+const TimeModel = require("../models/TimeModel")
+const DateModel = require("../models/DateModel")
+const HumidityModel = require("../models/HumidityModel")
+const TemperatureModel = require("../models/TemperatureModel")
 
 
 const request = (app) => {
@@ -29,6 +32,10 @@ const request = (app) => {
             console.log({ d: value })
 
             await SensorsModel.findByIdAndUpdate(existingModel._id, { date: value })
+
+            const model = new DateModel()
+            model.data = value
+            await model.save()
         }
 
         //date
@@ -37,6 +44,9 @@ const request = (app) => {
             console.log({ clock: value })
             await SensorsModel.findByIdAndUpdate(existingModel._id, { time: value })
 
+            const model = new TimeModel()
+            model.data = value
+            await model.save()
         }
 
         //date
@@ -46,6 +56,9 @@ const request = (app) => {
 
             await SensorsModel.findByIdAndUpdate(existingModel._id, { humidity: value })
 
+            const model = new HumidityModel()
+            model.data = value
+            await model.save()
         }
 
 
@@ -53,6 +66,10 @@ const request = (app) => {
         if (data.indexOf("temperature:") > -1) {
             const value = data.replace("temperature:", "")
             await SensorsModel.findByIdAndUpdate(existingModel._id, { temperature: value })
+
+            const model = new TemperatureModel()
+            model.data = value
+            await model.save()
 
             console.log({ t: value })
         }

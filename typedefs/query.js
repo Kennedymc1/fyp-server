@@ -7,6 +7,7 @@ module.exports = gql`
     isLoggedIn:Boolean
     sensorData: Sensors
     records: [Record]
+    charts: Chart
   
 
   }
