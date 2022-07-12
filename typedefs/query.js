@@ -8,7 +8,8 @@ module.exports = gql`
     sensorData: Sensors
     records: [Record]
     charts: Chart
-  
+    stats: Stat
+    entries: [Entry]
 
   }
 `;

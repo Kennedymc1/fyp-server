@@ -3,6 +3,10 @@ const mutation = require("./mutation");
 const sensors = require("./types/sensors");
 const record = require("./types/record");
 const chart = require("./types/chart");
+const stat = require("./types/stat");
+const entry = require("./types/entry");
+
+
 
 
 
@@ -21,5 +25,7 @@ module.exports = [
    userTypeDef,
    sensors,
    record,
-   chart
+   chart,
+   stat,
+   entry
 ];
