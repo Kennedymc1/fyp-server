@@ -11,8 +11,10 @@ const request = (app) => {
      * 
      */
     app.get('/post-data', async (req, res) => {
-        const data = req.query.data
+        console.log("post data")
 
+        const data = req.query.data
+        console.log({data})
         let existingModel = await SensorsModel.findOne()
 
         if (!existingModel) {
@@ -42,11 +44,13 @@ const request = (app) => {
         if (data.indexOf("time:") > -1) {
             const value = data.replace("time:", "")
             console.log({ clock: value })
-            await SensorsModel.findByIdAndUpdate(existingModel._id, { time: value })
+            // await SensorsModel.findByIdAndUpdate(existingModel._id, { time: value })
 
             const model = new TimeModel()
             model.data = value
             await model.save()
+
+            console.log("made api time call")
         }
 
         //date

@@ -16,6 +16,9 @@ module.exports = {
         records: async (_, __, context) => {
             return await RecordsModel.find().sort({ _id: "desc" }).limit(20)
         },
+        time: async (_, __, context) => {
+            return await TimeModel.find().sort({ _id: "desc" }).limit(1)
+        },
 
         charts: async (_, __, context) => {
             let time = [], humidity = [], temperature = [], date = []

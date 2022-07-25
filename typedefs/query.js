@@ -10,6 +10,7 @@ module.exports = gql`
     charts: Chart
     stats: Stat
     entries: [Entry]
+    time: [Record]
 
   }
 `;
