@@ -11,10 +11,15 @@ def makeRequest():
     threading.Timer(5.0, makeRequest).start()
 
     millis = current_milli_time()
-    url = 'http://localhost:4000/post-data?data=time:'+str(millis)
+    props = '?data=time:'+str(millis)
+
+    devUrl = 'http://localhost:4000/post-data'
+    prodUrl = 'https://hardware-lab-1.herokuapp.com/post-data'
+    url = prodUrl + props
+
     x = requests.get(url)
 
-    print("raspberry data sent: "+ str(millis))
+    print("raspberry data sent: " + str(millis))
 
 
 makeRequest()

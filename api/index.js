@@ -2,6 +2,7 @@ const express = require('express')
 var cors = require('cors')
 
 const postData = require('./post-data')
+const uploadImage = require('./upload-image')
 
 
 
@@ -21,7 +22,7 @@ app.use(express.json({
 }))
 
 postData(app)
-
+uploadImage(app)
 
 
 
