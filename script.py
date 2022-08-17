@@ -1,6 +1,9 @@
 import requests
 import threading
 import time
+import os
+
+os.system("fswebcam -r 1280x720 --no-banner image.jpg")
 
 
 def current_milli_time():
@@ -8,18 +11,27 @@ def current_milli_time():
 
 
 def makeRequest():
-    threading.Timer(5.0, makeRequest).start()
+    # threading.Timer(5.0, makeRequest).start()
+    devUrl = 'http://localhost:4000'
+    prodUrl = 'https://hardware-lab-1.herokuapp.com'
 
-    millis = current_milli_time()
-    props = '?data=time:'+str(millis)
+    imageUploadUrl = devUrl + "/upload-image"
+    imagefile = open("image.jpg", "rb")
+    imageUploadResponse = requests.post(imageUploadUrl, files = {"image": imagefile})
+    print(imageUploadResponse)
 
-    devUrl = 'http://localhost:4000/post-data'
-    prodUrl = 'https://hardware-lab-1.herokuapp.com/post-data'
-    url = prodUrl + props
 
-    x = requests.get(url)
+    # millis = current_milli_time()
+    # props = '?data=time:'+str(millis)
 
-    print("raspberry data sent: " + str(millis))
+    # devUrl = 'http://localhost:4000/post-data'
+    # prodUrl = 'https://hardware-lab-1.herokuapp.com/post-data'
+
+    # url = prodUrl + props
+
+    # x = requests.get(url)
+
+    # print("raspberry data sent: " + str(millis))
 
 
 makeRequest()

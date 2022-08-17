@@ -11,6 +11,7 @@ module.exports = gql`
     stats: Stat
     entries: [Entry]
     time: [Record]
+    image: File
 
   }
 `;

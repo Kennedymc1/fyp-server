@@ -5,6 +5,8 @@ const record = require("./types/record");
 const chart = require("./types/chart");
 const stat = require("./types/stat");
 const entry = require("./types/entry");
+const file = require("./types/file");
+
 
 
 
@@ -27,5 +29,6 @@ module.exports = [
    record,
    chart,
    stat,
-   entry
+   entry,
+   file
 ];

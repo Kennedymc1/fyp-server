@@ -18,6 +18,7 @@
     "google-play-scraper": "^8.1.0",
     "graphql": "^15.5.0",
     "gridfs-stream": "^1.1.1",
+    "imagemin": "^8.0.1",
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb-memory-server": "^7.3.6",
