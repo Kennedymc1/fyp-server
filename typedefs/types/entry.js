@@ -4,6 +4,7 @@ module.exports = gql`
   
    type Entry{
       time: String
+      image: File
    }
 
 `

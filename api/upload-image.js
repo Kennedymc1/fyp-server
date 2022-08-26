@@ -1,5 +1,5 @@
 const fileUpload = require('express-fileupload');
-const ImageModel = require("../models/ImageModel")
+const EntryModel = require("../models/EntryModel")
 
 
 
@@ -21,23 +21,16 @@ const request = (app) => {
 
         const encode_img = imageFile.data.toString('base64');
 
-
-
-
-        const images = await ImageModel.find()
-
-        if (images.length > 0) {
-            console.log("starting update")
-            await ImageModel.findByIdAndUpdate(images[0]._id, {
-                name: imageFile.name,
-                data: encode_img
-            })
-        } else {
-            const model = new ImageModel()
-            model.name = imageFile.name
-            model.data = encode_img
-            await model.save()
+        const imageModel = {
+            name: imageFile.name,
+            data: encode_img
         }
+
+
+        const model = new ImageModel()
+        model.image = imageModel
+
+        await model.save()
 
         res.send('File uploaded!');
         console.log("complete")

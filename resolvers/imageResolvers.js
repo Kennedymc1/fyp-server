@@ -1,4 +1,4 @@
-const ImageModel = require("../models/ImageModel")
+const ImageModel = require("../models/EntryModel")
 
 module.exports = {
     Query: {

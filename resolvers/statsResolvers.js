@@ -1,20 +1,18 @@
-const SensorsModel = require("../models/SensorsModel");
-const RecordsModel = require("../models/RecordsModel");
-const TimeModel = require("../models/TimeModel")
-const DateModel = require("../models/DateModel")
-const HumidityModel = require("../models/HumidityModel")
-const TemperatureModel = require("../models/TemperatureModel")
+
+const EntryModel = require("../models/EntryModel")
 
 module.exports = {
     Query: {
 
 
         stats: async (_, __, context) => {
+            const entryResponse = await EntryModel.find()
+
             return {
-                peopleToday: 30,
-                peopleYesterday: 60,
-                people7Days: 325,
-                people30Days: 879
+                peopleToday: entryResponse.length,
+                peopleYesterday: 0,
+                people7Days: 0,
+                people30Days: 0
              }
         },
     }

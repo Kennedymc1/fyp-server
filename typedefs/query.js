@@ -12,7 +12,7 @@ module.exports = gql`
     entries: [Entry]
     time: [Record]
     image: File
-
+    entry(id: String): Entry
   }
 `;
 
