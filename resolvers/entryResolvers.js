@@ -14,6 +14,7 @@ module.exports = {
             const time = dateCreated(entryResponse)
 
             return {
+                _id: entryResponse._id,
                 time,
                 image: entryResponse.image
             }
@@ -26,6 +27,7 @@ module.exports = {
                 const time = dateCreated(entry)
 
                 return {
+                    _id: entry._id,
                     time,
                     image: entry.image
                 }
