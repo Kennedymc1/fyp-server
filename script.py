@@ -15,7 +15,7 @@ def makeRequest():
     devUrl = 'http://localhost:4000'
     prodUrl = 'https://hardware-lab-1.herokuapp.com'
 
-    imageUploadUrl = prodUrl + "/upload-image"
+    imageUploadUrl = devUrl + "/upload-image"
     imagefile = open("image.jpg", "rb")
     imageUploadResponse = requests.post(imageUploadUrl, files = {"image": imagefile})
     print(imageUploadResponse)

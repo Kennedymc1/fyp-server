@@ -27,7 +27,7 @@ const request = (app) => {
         }
 
 
-        const model = new ImageModel()
+        const model = new EntryModel()
         model.image = imageModel
 
         await model.save()

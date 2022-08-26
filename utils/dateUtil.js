@@ -20,7 +20,7 @@ const getDayInYear = (date) => {
 const dateCreated = (dbObject) => {
     var timestamp = dbObject._id.toString().substring(0, 8);
     var createdOn = new Date(parseInt(timestamp, 16) * 1000);
-    return createdOn.toLocaleDateString()
+    return createdOn.toLocaleDateString() + " " + createdOn.toTimeString()
 }
 /**
  * @deprecated use dateCreated()
@@ -37,7 +37,7 @@ const toDateString = (dbObject) => {
  */
 const compareDays = (fromDate) => {
     const date = new Date(fromDate)
-    const diff = Date.now() - date.getTime() 
+    const diff = Date.now() - date.getTime()
     const days = diff / 86_400_000
     return Math.round(days)
 }
@@ -47,9 +47,9 @@ const compareDays = (fromDate) => {
  * @param {Date} fromDate 
  * @returns 
  */
- const compareHours = (fromDate) => {
+const compareHours = (fromDate) => {
     const date = new Date(fromDate)
-    const diff = Date.now() - date.getTime() 
+    const diff = Date.now() - date.getTime()
     const hours = diff / 3_600_000
     return Math.round(hours)
 }

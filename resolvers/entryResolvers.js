@@ -11,7 +11,7 @@ module.exports = {
         entry: async (_, { id }, context) => {
             const entryResponse = await EntryModel.findById(id)
 
-            const time = dateCreated(entry)
+            const time = dateCreated(entryResponse)
 
             return {
                 time,
