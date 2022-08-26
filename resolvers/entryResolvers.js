@@ -21,7 +21,7 @@ module.exports = {
         },
 
         entries: async (_, __, context) => {
-            const entryResponse = await EntryModel.find()
+            const entryResponse = await EntryModel.find().sort({ _id: "desc" });
 
             return entryResponse.map(entry => {
                 const time = dateCreated(entry)
