@@ -16,7 +16,9 @@ module.exports = {
             return {
                 _id: entryResponse._id,
                 time,
-                image: entryResponse.image
+                image: entryResponse.image,
+                temperature: entryResponse.temperature
+
             }
         },
 

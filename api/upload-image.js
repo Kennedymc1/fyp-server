@@ -14,10 +14,11 @@ const request = (app) => {
             return res.status(400).send('No files were uploaded.');
         }
 
-
+        const temperature = req.query.temp
 
         // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
         const imageFile = req.files.image;
+
 
         const encode_img = imageFile.data.toString('base64');
 
@@ -29,6 +30,7 @@ const request = (app) => {
 
         const model = new EntryModel()
         model.image = imageModel
+        model.temperature = temperature
 
         await model.save()
 

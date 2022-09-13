@@ -6,6 +6,7 @@ module.exports = gql`
       _id: String
       time: String
       image: File
+      temperature: String
    }
 
 `
