@@ -1,12 +1,8 @@
-'use strict'
 
-// var express = require('express');
-// var app = express();
-// var http = require('http').Server(app);
-var io = require('socket.io-client');
-var socket = io.connect('https://project.dirtservers.com', {reconnect: true});
+var {io} = require('socket.io-client');
+
 var fs = require('fs');
-// var path = require('path');
+var path = require('path');
 
 var spawn = require('child_process').spawn;
 var proc;
@@ -16,25 +12,27 @@ var proc;
 
 // var sockets = {};
 
-// io.on('connection', function (socket) {
+const socket = io('https://project.dirtservers.com')
+
+//  io.on('connection', function (socket) {
 
     // sockets[socket.id] = socket;
     // console.log("Total clients connected : ", Object.keys(sockets).length);
 
-    socket.on('disconnect', function () {
-        // delete sockets[socket.id];
+    // socket.on('disconnect', function () {
+    //     // delete sockets[socket.id];
 
-        // no more sockets, kill the stream
-        // if (Object.keys(sockets).length == 0) {
-            // app.set('watchingFile', false);
-            if (proc) proc.kill();
-            fs.unwatchFile('./stream/image_stream.jpg');
-        // }
-    });
+    //     // no more sockets, kill the stream
+    //     // if (Object.keys(sockets).length == 0) {
+    //         // app.set('watchingFile', false);
+    //         if (proc) proc.kill();
+    //         fs.unwatchFile('./stream/image_stream.jpg');
+    //     // }
+    // });
 
 
     /////
-    startStreaming(io);
+    startStreaming();
 
 
 // });
@@ -48,10 +46,10 @@ var proc;
 //   }
 // }
 
-function startStreaming(io) {
+function startStreaming() {
 
     // if (app.get('watchingFile')) {
-        socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+        // socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
         // return;
     // }
 
@@ -63,6 +61,7 @@ function startStreaming(io) {
     // app.set('watchingFile', true);
 
     fs.watchFile('./stream/image_stream.jpg', function (current, previous) {
+        console.log("image changed")
         socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
     })
 
