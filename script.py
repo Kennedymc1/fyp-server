@@ -25,22 +25,22 @@ def getTemperature():
 
 def takePicture():
     os.system("raspistill -o image.jpg")
-    camera = PiCamera()
+    # camera = PiCamera()
 
-    camera.start_preview()
-    sleep(5)
-    camera.capture('/image.jpg')
+    # camera.start_preview()
+    # sleep(5)
+    # camera.capture('/image.jpg')
 
-    camera.stop_preview()
+    # camera.stop_preview()
 
 def makeRequest():
-    threading.Timer(10.0, makeRequest).start()
+    threading.Timer(45.0, makeRequest).start()
     takePicture()
     devUrl = 'http://localhost:4000'
     prodUrl = 'https://hardware-lab-1.herokuapp.com'
 
     temperature = getTemperature()
-    imageUploadUrl = devUrl + "/upload-image?temp=%d"%temperature
+    imageUploadUrl = prodUrl + "/upload-image?temp=%d"%temperature
     imagefile = open("image.jpg", "rb")
     imageUploadResponse = requests.post(imageUploadUrl, files = { 
         "image": imagefile    
