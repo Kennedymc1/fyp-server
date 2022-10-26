@@ -1,6 +1,7 @@
 
 var {io} = require('socket.io-client');
-
+var express = require('express');
+var app = express();
 var fs = require('fs');
 var path = require('path');
 
@@ -48,17 +49,17 @@ const socket = io('https://project.dirtservers.com')
 
 function startStreaming() {
 
-    // if (app.get('watchingFile')) {
-        // socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
-        // return;
-    // }
+    if (app.get('watchingFile')) {
+        socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+        return;
+    }
 
     var args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "50"];
     proc = spawn('raspistill', args);
 
     console.log('Watching for changes...');
 
-    // app.set('watchingFile', true);
+    app.set('watchingFile', true);
 
     fs.watchFile('./stream/image_stream.jpg', function (current, previous) {
         console.log("image changed")
