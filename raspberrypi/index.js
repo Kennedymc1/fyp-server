@@ -21,7 +21,7 @@ app.listen(3001, () => console.log(`server listening on port 3001`))
 
 
 
-var args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "50", "-n","-q", "10","-th","none"];
+var args = ["-w", "480", "-h", "360", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "50", "-n","-q", "8"];
 proc = spawn('raspistill', args);
 
 console.log('Watching for changes...');
