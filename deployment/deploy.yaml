@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: project-base-deployment
   labels:
-    app: project-base
+    app: base
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: project-base
+      app: base
   template:
     metadata:
       labels:
-        app: project-base
+        app: base
     spec:
       containers:
-        - name: project-base
+        - name: base
           image: 694879447632.dkr.ecr.us-east-2.amazonaws.com/project:base
           imagePullPolicy: Always
           ports:
@@ -26,19 +26,19 @@ kind: Deployment
 metadata:
   name: project-socket-deployment
   labels:
-    app: project-socket
+    app: socket
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: project-socket
+      app: socket
   template:
     metadata:
       labels:
-        app: project-socket
+        app: socket
     spec:
       containers:
-        - name: project-socket
+        - name: socket
           image: 694879447632.dkr.ecr.us-east-2.amazonaws.com/project:socket
           imagePullPolicy: Always
           ports:

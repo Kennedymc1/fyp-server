@@ -5,7 +5,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: project-base
+    app: base
   ports:
     - protocol: TCP
       port: 4000
@@ -18,7 +18,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: minchat-socket
+    app: socket
   ports:
     - protocol: TCP
       port: 4001
