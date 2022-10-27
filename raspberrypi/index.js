@@ -35,28 +35,15 @@ fs.watchFile(imagePath, function (current, previous) {
     // socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
     fs.readFile(imagePath, (err, data) => {
         if (err) return
+        console.log({ data });
 
-        const base64 = _arrayBufferToBase64(data)
-        console.log({ base64 })
-        console.log("feed recieved")
-        const processedData = "data:image/png;base64, " + base64
-
-
-        socket.emit('liveStream', processedData)
+        socket.emit('liveStream', data, (status) => {
+            console.log({ status })
+        })
 
     });
 
 })
-
-function _arrayBufferToBase64(buffer) {
-    var binary = '';
-    var bytes = new Uint8Array(buffer);
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
-}
 
 
 
