@@ -31,6 +31,7 @@ const socket = io('https://project.dirtservers.com')
     //     // }
     // });
 
+    app.listen(4000, ()=> console.log(`serverlistening on port 4000`))
 
     /////
     startStreaming();
