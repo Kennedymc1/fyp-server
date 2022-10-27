@@ -9,9 +9,10 @@ var spawn = require('child_process').spawn;
 var proc;
 
 const productionUrl = 'https://project.dirtservers.com'
+
 const devUrl = 'http://localhost:4001'
 
-const serverUrl = devUrl
+const serverUrl = productionUrl
 const socket = io(serverUrl)
 
 app.listen(4000, () => console.log(`server listening on port 3001`))
@@ -19,13 +20,9 @@ app.listen(4000, () => console.log(`server listening on port 3001`))
 
 
 
-// if (app.get('watchingFile')) {
-//     socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
-//     return;
-// }
 
-// var args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "50", "-n"];
-// proc = spawn('raspistill', args);
+var args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "999999999", "-tl", "50", "-n"];
+proc = spawn('raspistill', args);
 
 console.log('Watching for changes...');
 
