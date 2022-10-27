@@ -10,6 +10,5 @@ RUN npm install
 COPY . ./
 
 ENV SOCKET_PORT=4001
-ENV REST_API_PORT=4003
 
 CMD ["npm", "start" ]

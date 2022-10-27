@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const http = require('http');
-const axios = require('axios')
 const dotenv = require('dotenv');
 
 dotenv.config({ path: '../.env' });
