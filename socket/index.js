@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
 
     console.log({ data })
     //send the same data out
-    socket.emit('livestream', data)
+    socket.emit('showStream', data)
     return
   }
   )
