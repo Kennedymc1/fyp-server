@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server');
 
 //todo on reset password send email with confirmation code
 

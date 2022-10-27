@@ -1,4 +1,4 @@
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./typedefs');
 const resolvers = require('./resolvers');
 const db = require('./db')
@@ -6,7 +6,6 @@ const config = require('./config')
 const dotenv = require('dotenv');
 
 const { context } = require('./libs/auth');
-const app = require('./api');
 
 
 dotenv.config();
@@ -36,11 +35,7 @@ const server = new ApolloServer({
 
  
 
-server.applyMiddleware({
-  app,
-})
 
-
-app.listen(config.port, () => console.log(`🚀  Server ready at ${config.port}`))
+server.listen(config.port, () => console.log(`🚀  Server ready at ${config.port}`))
 
 

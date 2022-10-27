@@ -1,5 +1,5 @@
 const { getToken, encryptPassword, comparePassword, isResetPasswordTokenExpired } = require("../utils")
-const { AuthenticationError } = require('apollo-server-express');
+const { AuthenticationError } = require('apollo-server');
 const UserModel = require('../models/SecondaryUserModel')
 const constants = require('../constants')
 const sgMail = require('@sendgrid/mail');

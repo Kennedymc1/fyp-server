@@ -1,5 +1,5 @@
 const { getToken, encryptPassword, comparePassword, isResetPasswordTokenExpired } = require("../utils")
-const { AuthenticationError } = require('apollo-server-express');
+const { AuthenticationError } = require('@apollo/server');
 const PermissionUserModel = require('../models/PermissionUserModel')
 const UserModel = require('../models/UserModel')
 
