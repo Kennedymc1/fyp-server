@@ -2,7 +2,7 @@ const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./typedefs');
 const resolvers = require('./resolvers');
 const db = require('./db')
-const config = require('./base/config')
+const config = require('./config')
 const dotenv = require('dotenv');
 
 const { context } = require('./libs/auth');
