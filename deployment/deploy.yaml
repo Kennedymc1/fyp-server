@@ -1,22 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: project-deployment
+  name: project-base-deployment
   labels:
-    app: project
+    app: project-base
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: project
+      app: project-base
   template:
     metadata:
       labels:
-        app: project
+        app: project-base
     spec:
       containers:
-        - name: project
-          image: 694879447632.dkr.ecr.us-east-2.amazonaws.com/project
+        - name: project-base
+          image: 694879447632.dkr.ecr.us-east-2.amazonaws.com/project:base
           imagePullPolicy: Always
           ports:
             - containerPort: 4000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-socket-deployment
+  labels:
+    app: project-socket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-socket
+  template:
+    metadata:
+      labels:
+        app: project-socket
+    spec:
+      containers:
+        - name: project-socket
+          image: 694879447632.dkr.ecr.us-east-2.amazonaws.com/project:socket
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4001

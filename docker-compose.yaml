@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  base-service:
+    build: ./base
+    env_file:
+      - .env
+    ports:
+      - "${BASE_PORT}:${BASE_PORT}"
+    volumes:
+      - ./base:/app
+
+  socket-service:
+    build: ./socket
+    env_file:
+      - .env
+    ports:
+      - "${SOCKET_PORT}:${SOCKET_PORT}"
+    volumes:
+      - ./socket:/app

@@ -1,0 +1,103 @@
+on:
+  push:
+    branches: [master]
+  # pull_request:
+  #   branches: [ master ]
+
+env:
+  RELEASE_REVISION: ${{ github.sha }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: us-east-2
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  KUBE_NAMESPACE: default
+  ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+
+name: AWS ECR push
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.4.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Install Octopus CLI
+        uses: OctopusDeploy/install-octopus-cli-action@v1.1.1
+        with:
+          version: latest
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # - name: Set up Docker Buildx
+      #   id: buildx
+      #   uses: docker/setup-buildx-action@master
+      # - name: Docker cache layers
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-single-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-single-buildx
+
+      - name: Build, tag, and push the images for all the microservices to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+
+        run: |
+          # Build the docker containers for the microservices and push them to ECR 
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:base-${{ env.RELEASE_REVISION }} ./base
+          echo "Pushing base image to ECR..."
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:base-${{ env.RELEASE_REVISION }}
+          # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:base-${{ env.RELEASE_REVISION }}"
+
+
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:socket-${{ env.RELEASE_REVISION }} ./socket
+          echo "Pushing base image to ECR..."
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:socket-${{ env.RELEASE_REVISION }}
+
+      - name: Deploy base image to Kubernetes cluster
+        uses: kodermax/kubectl-aws-eks@master
+        env:
+          RELEASE_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:base-${{ env.RELEASE_REVISION }}
+        with:
+          args: set image deployment/base-deployment project-base=$RELEASE_IMAGE -n $KUBE_NAMESPACE
+
+      - name: Deploy socket image to Kubernetes cluster
+        uses: kodermax/kubectl-aws-eks@master
+        env:
+          RELEASE_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:socket-${{ env.RELEASE_REVISION }}
+        with:
+          args: set image deployment/project-socket-deployment minchat-socket=$RELEASE_IMAGE -n $KUBE_NAMESPACE
+
+      - name: Verify Base microservice Kubernetes deployment
+        uses: kodermax/kubectl-aws-eks@master
+        with:
+          args: rollout status deploy project-base-deployment -n $KUBE_NAMESPACE
+
+      - name: Verify socket microservice Kubernetes deployment
+        uses: kodermax/kubectl-aws-eks@master
+        with:
+          args: rollout status deploy project-socket-deployment -n $KUBE_NAMESPACE

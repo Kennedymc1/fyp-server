@@ -15,10 +15,17 @@ spec:
     - host: project.dirtservers.com
       http:
         paths:
+          - path: /base
+            pathType: Prefix
+            backend:
+              service:
+                name: project-base-service
+                port:
+                  number: 4000
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: project
+                name: project-socket-service
                 port:
-                  number: 4000
+                  number: 4001
