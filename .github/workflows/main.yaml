@@ -67,6 +67,8 @@ jobs:
           ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
 
         run: |
+          echo $ECR_REGISTRY/$ECR_REPOSITORY
+          
           # Build the docker containers for the microservices and push them to ECR 
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:base-${{ env.RELEASE_REVISION }} ./base
           echo "Pushing base image to ECR..."
