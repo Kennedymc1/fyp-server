@@ -85,14 +85,14 @@ jobs:
         env:
           RELEASE_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:base-${{ env.RELEASE_REVISION }}
         with:
-          args: set image deployment/base-deployment project-base=$RELEASE_IMAGE -n $KUBE_NAMESPACE
+          args: set image deployment/project-base-deployment base=$RELEASE_IMAGE -n $KUBE_NAMESPACE
 
       - name: Deploy socket image to Kubernetes cluster
         uses: kodermax/kubectl-aws-eks@master
         env:
           RELEASE_IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:socket-${{ env.RELEASE_REVISION }}
         with:
-          args: set image deployment/project-socket-deployment minchat-socket=$RELEASE_IMAGE -n $KUBE_NAMESPACE
+          args: set image deployment/project-socket-deployment socket=$RELEASE_IMAGE -n $KUBE_NAMESPACE
 
       - name: Verify Base microservice Kubernetes deployment
         uses: kodermax/kubectl-aws-eks@master
