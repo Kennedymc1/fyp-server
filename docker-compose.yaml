@@ -9,11 +9,11 @@ services:
     volumes:
       - ./base:/app
 
-  socket-service:
-    build: ./socket
-    env_file:
-      - .env
-    ports:
-      - "${SOCKET_PORT}:${SOCKET_PORT}"
-    volumes:
-      - ./socket:/app
+  # socket-service:
+  #   build: ./socket
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "${SOCKET_PORT}:${SOCKET_PORT}"
+  #   volumes:
+  #     - ./socket:/app

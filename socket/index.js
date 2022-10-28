@@ -2,6 +2,21 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const dotenv = require('dotenv');
+const fileUpload = require("express-fileupload");
+const faceapiService = require('./faceapiService');
+
+app.use(fileUpload());
+
+app.post("/upload", async (req, res) => {
+  const { file } = req.files;
+
+  console.log({file})
+  const result = await faceapiService.detect(file.data);
+
+  res.json({
+    detectedFaces: result.length,
+  });
+});
 
 dotenv.config({ path: '../.env' });
 
@@ -18,6 +33,7 @@ const io = require("socket.io")(server, {
 
 
 
+
 /**
  * io connection
  */
@@ -31,6 +47,12 @@ io.on('connection', (socket) => {
 
   socket.on("liveStream", (data) => {
 
+    const result = await faceapiService.detect(file.data);
+
+    res.json({
+      detectedFaces: result.length,
+    });
+    
     console.log({ data })
     //send the same data out
     io.emit('showStream', data)

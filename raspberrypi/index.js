@@ -8,7 +8,7 @@ var path = require('path');
 var spawn = require('child_process').spawn;
 var proc;
 
-const productionUrl = 'https://project.dirtservers.com'
+const productionUrl = 'https://fyp-socket.herokuapp.com/'
 
 const devUrl = 'http://localhost:4001'
 
