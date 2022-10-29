@@ -21,7 +21,7 @@ app.listen(3001, () => console.log(`server listening on port 3001`))
 
 
 
-var args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "99999999", "-tl", "50", "-n","-q", "10", "-th","none"];
+var args = ["-w", "640", "-h", "480", "-o", "./stream/image_stream.jpg", "-t", "99999999", "-tl", "50", "-n", "-q", "10", "-th", "none"];
 
 proc = spawn('raspistill', args);
 
@@ -29,7 +29,7 @@ console.log('Watching for changes...');
 
 app.set('watchingFile', true);
 
-const imagePath = './stream/image_stream.jpg'
+const imagePath = '/run/shm/%04d.jpg'
 
 fs.watchFile(imagePath, function (current, previous) {
     // socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
@@ -37,7 +37,7 @@ fs.watchFile(imagePath, function (current, previous) {
         if (err) return
 
         socket.emit('liveStream', data)
-    console.log("image emitted")
+        console.log("image emitted")
 
 
     });
