@@ -6,6 +6,7 @@ var fs = require('fs');
 var path = require('path');
 
 var spawn = require('child_process').spawn;
+const { exec } = require('child_process');
 var proc;
 
 const productionUrl = 'http://ec2-18-188-141-169.us-east-2.compute.amazonaws.com/'
@@ -24,10 +25,22 @@ const imagePath = "./stream/image_stream.jpg"
 
 var args = ["-r", "640x480", "--no--banner", "-l", "1", "-d", "/dev/video0", "-i", "0", "--jpeg", "30", imagePath];
 
-proc = spawn('fswebcam', args);
 
-proc.on("error", error => console.log({ error }))
-proc.on("data", data => console.log({ data }))
+exec('fswebcam -c ./webcam.conf', (err, stdout, stderr) => {
+    if (err) {
+      console.log({error})
+      return;
+    }
+  
+    // the *entire* stdout and stderr (buffered)
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+
+// proc = spawn('fswebcam', args);
+
+// proc.on("error", error => console.log({ error }))
+// proc.on("data", data => console.log({ data }))
 
 
 console.log('Watching for changes...');
