@@ -22,8 +22,13 @@ app.listen(3001, () => console.log(`server listening on port 3001`))
 
 const imagePath = "./stream/image_stream.jpg"
 
+var args = ["-r", "640x480", "--no--banner", "-l", "1", "-d", "/dev/video0", "-i", "0", "--jpeg", "30", imagePath];
 
-proc = spawn('fswebcam -r 640x480 --no--banner -l 1 -d dev/video0 -i 0 --jpeg 30 ' + imagePath);
+proc = spawn('fswebcam', args);
+
+proc.on("error", error => console.log({ error }))
+proc.on("data", data => console.log({ data }))
+
 
 console.log('Watching for changes...');
 
