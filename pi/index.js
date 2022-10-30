@@ -23,19 +23,17 @@ app.listen(3001, () => console.log(`server listening on port 3001`))
 
 const imagePath = "./stream/image_stream.jpg"
 
-var args = ["-r", "640x480", "--no--banner", "-l", "1", "-d", "/dev/video0", "-i", "0", "--jpeg", "30", imagePath];
 
+// exec('fswebcam -c ./webcam.conf', (err, stdout, stderr) => {
+//     if (err) {
+//         console.log({ error })
+//         return;
+//     }
 
-exec('fswebcam -c ./webcam.conf', (err, stdout, stderr) => {
-    if (err) {
-      console.log({error})
-      return;
-    }
-  
-    // the *entire* stdout and stderr (buffered)
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
-  });
+//     // the *entire* stdout and stderr (buffered)
+//     console.log(`stdout: ${stdout}`);
+//     console.log(`stderr: ${stderr}`);
+// });
 
 // proc = spawn('fswebcam', args);
 
@@ -48,8 +46,7 @@ console.log('Watching for changes...');
 app.set('watchingFile', true);
 
 
-fs.watchFile(imagePath, function (current, previous) {
-    // socket.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+fs.watchFile(imagePath, {interval: 500}, function (current, previous) {
     fs.readFile(imagePath, (err, data) => {
         if (err) return
 
