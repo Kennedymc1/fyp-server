@@ -24,16 +24,16 @@ app.listen(3001, () => console.log(`server listening on port 3001`))
 const imagePath = "./stream/image_stream.jpg"
 
 
-// exec('fswebcam -c ./webcam.conf', (err, stdout, stderr) => {
-//     if (err) {
-//         console.log({ error })
-//         return;
-//     }
+exec('fswebcam -c ./webcam.conf', (err, stdout, stderr) => {
+    if (err) {
+        console.log({ error })
+        return;
+    }
 
-//     // the *entire* stdout and stderr (buffered)
-//     console.log(`stdout: ${stdout}`);
-//     console.log(`stderr: ${stderr}`);
-// });
+    // the *entire* stdout and stderr (buffered)
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+});
 
 // proc = spawn('fswebcam', args);
 
