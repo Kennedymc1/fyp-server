@@ -26,13 +26,9 @@ const imagePath = "./stream/image_stream.jpg"
 
 exec('fswebcam -c ./webcam.conf', (err, stdout, stderr) => {
     if (err) {
-        console.log({ error })
+        console.log({ err })
         return;
     }
-
-    // the *entire* stdout and stderr (buffered)
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
 });
 
 // proc = spawn('fswebcam', args);
@@ -46,7 +42,7 @@ console.log('Watching for changes...');
 app.set('watchingFile', true);
 
 
-fs.watchFile(imagePath, {interval: 500}, function (current, previous) {
+fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
     fs.readFile(imagePath, (err, data) => {
         if (err) return
 
