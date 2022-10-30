@@ -20,12 +20,11 @@ app.listen(3001, () => console.log(`server listening on port 3001`))
 
 
 
-const imagePath = '/run/shm/%04d.jpg'
-// const imagePath = "./stream/image_stream.jpg"
+const imagePath = "./stream/image_stream.jpg"
 
-var args = ["-w", "640", "-h", "480", "-o", imagePath, "-t", "99999999", "-tl", "50", /**"-n",**/ "-q", "10", "-th", "none"];
+var args = ["-r", "640x480", "--no--banner", "-l", "1", "-d", "/dev/video0", "-i", "0","--jpeg","30", imagePath];
 
-proc = spawn('raspistill', args);
+proc = spawn('fswebcam', args);
 
 console.log('Watching for changes...');
 
