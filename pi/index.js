@@ -9,6 +9,7 @@ var spawn = require('child_process').spawn;
 const { exec } = require('child_process');
 var gpio = require('rpi-gpio');
 
+let cameraRunning = false
 
 var proc;
 
@@ -25,12 +26,7 @@ app.listen(3001, () => console.log(`server listening on port 3001`))
 const imagePath = "./stream/image_stream.jpg"
 
 
-exec('fswebcam -c ./webcam.conf', (err, stdout, stderr) => {
-    if (err) {
-        console.log({ err })
-        return;
-    }
-});
+exec('fswebcam -c ./webcam.conf');
 
 
 
@@ -57,12 +53,23 @@ socket.on("trigger", (data) => {
     console.log({ data })
 
     exec('pkill fswebcam')
+    cameraRunning = false
 })
+
 
 
 gpio.setup(10, gpio.DIR_IN, gpio.EDGE_BOTH)
 
+
+
 gpio.on('change', function (channel, value) {
-    console.log('Channel ' + channel + ' value is now ' + value);
+    if (channel === 10 && value) {
+        cameraRunning = true
+        if (!cameraRunning) {
+            console.log('Channel ' + channel + ' value is now ' + value);
+            exec('fswebcam -c ./webcam.conf');
+
+        }
+    }
 });
 
