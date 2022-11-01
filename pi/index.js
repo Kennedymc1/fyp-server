@@ -11,14 +11,12 @@ var proc;
 
 const productionUrl = 'http://ec2-18-188-141-169.us-east-2.compute.amazonaws.com/'
 
-const devUrl = 'http://localhost:4001'
+// const devUrl = 'http://localhost:4001'
 
 const serverUrl = productionUrl
 const socket = io(serverUrl)
 
 app.listen(3001, () => console.log(`server listening on port 3001`))
-
-
 
 
 const imagePath = "./stream/image_stream.jpg"
@@ -31,10 +29,6 @@ exec('fswebcam -c ./webcam.conf', (err, stdout, stderr) => {
     }
 });
 
-// proc = spawn('fswebcam', args);
-
-// proc.on("error", error => console.log({ error }))
-// proc.on("data", data => console.log({ data }))
 
 
 console.log('Watching for changes...');
@@ -55,4 +49,10 @@ fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
 })
 
 
+
+socket.on("trigger", (data) => {
+    console.log({ data })
+
+    exec('pkill fswebcam')
+})
 
