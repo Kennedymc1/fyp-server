@@ -7,6 +7,9 @@ var path = require('path');
 
 var spawn = require('child_process').spawn;
 const { exec } = require('child_process');
+var gpio = require('rpi-gpio');
+
+
 var proc;
 
 const productionUrl = 'http://ec2-18-188-141-169.us-east-2.compute.amazonaws.com/'
@@ -55,4 +58,11 @@ socket.on("trigger", (data) => {
 
     exec('pkill fswebcam')
 })
+
+
+gpio.setup(10, gpio.DIR_IN, gpio.EDGE_BOTH)
+
+gpio.on('change', function (channel, value) {
+    console.log('Channel ' + channel + ' value is now ' + value);
+});
 
