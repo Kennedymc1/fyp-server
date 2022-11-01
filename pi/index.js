@@ -25,10 +25,7 @@ app.listen(3001, () => console.log(`server listening on port 3001`))
 
 const imagePath = "./stream/image_stream.jpg"
 
-
-exec('fswebcam -c ./webcam.conf');
-
-
+// exec('fswebcam -c ./webcam.conf');
 
 console.log('Watching for changes...');
 
@@ -64,11 +61,10 @@ gpio.setup(10, gpio.DIR_IN, gpio.EDGE_BOTH)
 
 gpio.on('change', function (channel, value) {
     if (channel === 10 && value) {
-        cameraRunning = true
         if (!cameraRunning) {
             console.log('Channel ' + channel + ' value is now ' + value);
             exec('fswebcam -c ./webcam.conf');
-
+            cameraRunning = true
         }
     }
 });
