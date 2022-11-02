@@ -50,8 +50,6 @@ fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
 
 socket.on("trigger", (data) => {
     console.log({ data })
-
-    exec('pkill fswebcam')
     cameraRunning = false
 })
 
@@ -62,7 +60,7 @@ gpio.setup(12, gpio.DIR_IN, gpio.EDGE_BOTH)
 
 
 gpio.on('change', function (channel, value) {
-    console.log('Channel ' + channel + ' value is now ' + value);
+    // console.log('Channel ' + channel + ' value is now ' + value);
     if (channel === 12 && value) {
         if (!cameraRunning) {
             console.log("camera set to true")
