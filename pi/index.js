@@ -23,6 +23,9 @@ const socket = io(serverUrl)
 app.listen(3001, () => console.log(`server listening on port 3001`))
 
 
+exec('fswebcam -c ./webcam.conf');
+
+
 const imagePath = "./stream/image_stream.jpg"
 
 // exec('fswebcam -c ./webcam.conf');
@@ -35,11 +38,10 @@ app.set('watchingFile', true);
 fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
     fs.readFile(imagePath, (err, data) => {
         if (err) return
-
-        socket.emit('liveStream', data)
-        console.log("image emitted")
-
-
+        if (cameraRunning) {
+            socket.emit('liveStream', data)
+            console.log("image emitted")
+        }
     });
 
 })
@@ -63,7 +65,6 @@ gpio.on('change', function (channel, value) {
     if (channel === 10 && value) {
         if (!cameraRunning) {
             console.log('Channel ' + channel + ' value is now ' + value);
-            exec('fswebcam -c ./webcam.conf');
             cameraRunning = true
         }
     }
