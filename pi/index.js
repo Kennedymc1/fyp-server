@@ -62,9 +62,10 @@ gpio.setup(10, gpio.DIR_IN, gpio.EDGE_BOTH)
 
 
 gpio.on('change', function (channel, value) {
+    console.log('Channel ' + channel + ' value is now ' + value);
     if (channel === 10 && value) {
         if (!cameraRunning) {
-            console.log('Channel ' + channel + ' value is now ' + value);
+            console.log("camera set to true")
             cameraRunning = true
         }
     }
