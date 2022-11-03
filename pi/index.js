@@ -47,15 +47,39 @@ fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
 })
 
 
+const BUTTON_PIN = 12
+// const ORANGE_LED_PIN = 0
+const GREEN_LED_PIN = 38
+const RED_LED_PIN = 40
+gpio.setup(BUTTON_PIN, gpio.DIR_IN, gpio.EDGE_BOTH)
+// gpio.setup(ORANGE_LED_PIN, gpio.DIR_OUT)
+gpio.setup(GREEN_LED_PIN, gpio.DIR_OUT)
+gpio.setup(RED_LED_PIN, gpio.DIR_OUT)
 
-socket.on("trigger", (data) => {
-    console.log({ data })
+
+socket.on("approved", (data) => {
+    gpio.write(GREEN_LED_PIN, true)
     cameraRunning = false
+
+    setTimeout(() => {
+        gpio.write(GREEN_LED_PIN, false)
+        console.log("turned off green LED")
+    }, 5000)
+})
+
+socket.on("denied", (data) => {
+    console.log({ data })
+    gpio.write(RED_LED_PIN, true)
+    cameraRunning = false
+
+    setTimeout(() => {
+        gpio.write(RED_LED_PIN, false)
+        console.log("turned off red LED")
+    }, 5000)
+
 })
 
 
-
-gpio.setup(12, gpio.DIR_IN, gpio.EDGE_BOTH)
 
 
 
