@@ -58,6 +58,7 @@ gpio.setup(RED_LED_PIN, gpio.DIR_OUT)
 
 
 socket.on("approved", (data) => {
+    console.log({ data })
     gpio.write(GREEN_LED_PIN, true)
     cameraRunning = false
 
