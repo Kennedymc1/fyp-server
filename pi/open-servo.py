@@ -1,18 +1,15 @@
+from gpiozero import Servo
 from time import sleep
-import RPi.GPIO as GPIO
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(37,GPIO.OUT)
+servo = Servo(26)
 
-servo = GPIO.PWM(37,50)
+running = True
 
-servo.start(0)
-sleep(2)
-
-duty = 2
-while duty <= 17:
-        servo.ChangeDutyCycle(duty)
-        sleep(0.1)
-        duty = duty+1
-servo.stop()
-GPIO.cleanup()
+try: 
+        while running:
+            servo.min()
+            sleep(0.5)
+            servo.max()
+            running = False
+except KeyboardInterrupt:
+    print('error with opening servo')
