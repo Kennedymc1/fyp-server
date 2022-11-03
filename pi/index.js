@@ -79,9 +79,16 @@ socket.on("approved", (data) => {
     gpio.write(GREEN_LED_PIN, true)
     cameraRunning = false
 
+    exec('python open-servo.py')
+    console.log('open servo')
+
     setTimeout(() => {
         gpio.write(GREEN_LED_PIN, false)
         console.log("turned off green LED")
+
+        exec('python close-servo.py')
+        console.log('close')
+
     }, 5000)
 })
 
@@ -112,25 +119,3 @@ gpio.on('change', function (channel, value) {
 });
 
 
-// function angleToPercent(angle) {
-//     return Math.floor((angle / 180) * 100);
-// }
-
-
-// var curAngle = 0;
-// var direction = 1;
-let di = true
-setInterval(() => {
-
-    if (di) {
-        exec('python open-servo.py')
-        console.log('open')
-    } else {
-        exec('python close-servo.py')
-        console.log('close')
-    }
-
-    di = !di
-
-
-}, 3000);
