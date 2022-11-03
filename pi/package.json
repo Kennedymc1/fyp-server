@@ -16,6 +16,7 @@
     "nodemon": "^2.0.20",
     "pi-servo": "^1.0.2",
     "pi-servo-blaster.js": "0.0.3",
+    "raspi-soft-pwm": "^6.0.2",
     "rpi-gpio": "^2.1.7",
     "socket.io-client": "^4.5.3"
   }

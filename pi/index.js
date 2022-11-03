@@ -121,25 +121,16 @@ gpio.on('change', function (channel, value) {
 // var direction = 1;
 let di = true
 setInterval(() => {
-    console.log("interval " + di)
 
-    // pass the GPIO number
-    var sv1 = new PiServo(26);
-
-    sv1.open().then(function () {
-        console.log("run servo")
-        sv1.setDegree(di ? 90 : 0); // 0 - 180
-    });
+    if (di) {
+        exec('python open-servo.py')
+        console.log('open')
+    } else {
+        exec('python close-servo.py')
+        console.log('close')
+    }
 
     di = !di
 
-    // piblaster.setServoPwm("P1-11", angleToPercent(curAngle) + "%");
-    // console.log("Setting angle at: ", curAngle, angleToPercent(curAngle));
-    // curAngle += direction;
-    // // Change direction when it exceeds the max angle.
-    // if (curAngle >= 180) {
-    //     direction = -1;
-    // } else if (curAngle <= 0) {
-    //     direction = 1;
-    // }
-}, 5000);
+
+}, 3000);
