@@ -25,6 +25,14 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/* this is a modified version of the file found at: https://github.com/raspberrypi/userland/blob/master/host_applications/linux/apps/hello_pi/hello_fft/mailbox.c */
+
+#define _POSIX_C_SOURCE 200809L
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,16 +40,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 #include <assert.h>
 #include <stdint.h>
-#include <errno.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/sysmacros.h>
 
 #include "mailbox.h"
 
-//#define DEBUG
+#ifdef DEBUG
+#define dprintf(...) printf(__VA_ARGS__)
+#else
+#define dprintf(...)
+#endif
 
 #define PAGE_SIZE (4*1024)
 
@@ -62,11 +70,9 @@ void *mapmem(unsigned base, unsigned size)
       MAP_SHARED/*|MAP_FIXED*/,
       mem_fd,
       base);
-#ifdef DEBUG
-   printf("base=0x%x, mem=%p\n", base, mem);
-#endif
+   dprintf("base=0x%x, mem=%p\n", base, mem);
    if (mem == MAP_FAILED) {
-      printf("mmap error %d\n", (int)mem);
+      printf("mmap error %ld\n", (unsigned long int)mem);
       exit (-1);
    }
    close(mem_fd);
@@ -90,27 +96,26 @@ void *unmapmem(void *addr, unsigned size)
 
 static int mbox_property(int file_desc, void *buf)
 {
-   int fd = file_desc;
-   int ret_val = -1;
-
-   if (fd < 0) {
-      fd = mbox_open();
-   }
-   if (fd >= 0) {
-      ret_val = ioctl(fd, IOCTL_MBOX_PROPERTY, buf);
-
-      if (ret_val < 0) {
-         printf("ioctl_set_msg failed, errno %d: %m\n", errno);
-      }
-   }
 #ifdef DEBUG
    unsigned *p = buf; int i; unsigned size = *(unsigned *)buf;
-   for (i=0; i<size/4; i++)
+   printf("MBox Request:\n");
+   for (i=0; i<size/sizeof *p; i++)
       printf("%04x: 0x%08x\n", i*sizeof *p, p[i]);
 #endif
-   if (file_desc < 0)
-      mbox_close(fd);
 
+   int ret_val = ioctl(file_desc, IOCTL_MBOX_PROPERTY, buf);
+
+   if (ret_val < 0) {
+      printf("ioctl_set_msg failed:%d\n", ret_val);
+   }
+
+#ifdef DEBUG
+   // TODO: check return code in p[1]==0x80000000, otherwise... error
+   p = buf; size = *(unsigned *)buf;
+   printf("MBox Response:\n");
+   for (i=0; i<size/sizeof *p; i++)
+      printf("%04x: 0x%08x\n", i*sizeof *p, p[i]);
+#endif
    return ret_val;
 }
 
@@ -118,10 +123,9 @@ unsigned mem_alloc(int file_desc, unsigned size, unsigned align, unsigned flags)
 {
    int i=0;
    unsigned p[32];
-
-#ifdef DEBUG
-   printf("Requesting %d bytes\n", size);
-#endif
+dprintf("Requesting %d bytes\n", size);
+dprintf("Alignment: %d bytes\n", align);
+dprintf("mem_alloc flags:  0x%x\n", flags);
    p[i++] = 0; // size
    p[i++] = 0x00000000; // process request
 
@@ -135,10 +139,8 @@ unsigned mem_alloc(int file_desc, unsigned size, unsigned align, unsigned flags)
    p[i++] = 0x00000000; // end tag
    p[0] = i*sizeof *p; // actual size
 
-   if (mbox_property(file_desc, p) < 0)
-      return -1;
-   else
-      return p[5];
+   mbox_property(file_desc, p);
+   return p[5];
 }
 
 unsigned mem_free(int file_desc, unsigned handle)
@@ -175,10 +177,8 @@ unsigned mem_lock(int file_desc, unsigned handle)
    p[i++] = 0x00000000; // end tag
    p[0] = i*sizeof *p; // actual size
 
-   if (mbox_property(file_desc, p) < 0)
-      return ~0;
-   else
-      return p[5];
+   mbox_property(file_desc, p);
+   return p[5];
 }
 
 unsigned mem_unlock(int file_desc, unsigned handle)
@@ -266,34 +266,84 @@ unsigned execute_qpu(int file_desc, unsigned num_qpus, unsigned control, unsigne
    return p[5];
 }
 
-int mbox_open(void) {
-   int file_desc;
-   char filename[64];
+unsigned get_firmware_revision(int file_desc)
+{
+   int i=0;
+   unsigned p[32];
+   p[i++] = 0; // size
+   p[i++] = 0x00000000; // process request
 
-   // open a char device file used for communicating with kernel mbox driver
-   if ((file_desc = open("/dev/vcio", 0)) >= 0) {
-      /* New kernel, we use /dev/vcio, major 249, since kernel 4.1 */
-      return file_desc;
-   }
+   p[i++] = 0x10000; // (the tag id)
+   p[i++] = 4; // (size of the buffer)
+   p[i++] = 0; // (size of the data)
+   p[i++] = 0; // response buffer
 
-   /* Most likely an old kernel, so drop back to the old major=100 device */
-   sprintf(filename, "/tmp/mailbox-%d", getpid());
-   unlink(filename);
-   if (mknod(filename, S_IFCHR|0600, makedev(100, 0)) < 0) {
-      printf("Failed to create mailbox device %s: %m\n", filename);
-      return -1;
-   }
-   file_desc = open(filename, 0);
-   if (file_desc < 0) {
-      printf("Can't open device file %s: %m\n", filename);
-      unlink(filename);
-      return -1;
-   }
-   unlink(filename);
-
-   return file_desc;
+   p[i++] = 0x00000000; // end tag
+   p[0] = i*sizeof *p; // actual size
+   
+   mbox_property(file_desc, p);
+   return p[5];
 }
 
-void mbox_close(int file_desc) {
-   close(file_desc);
+unsigned get_board_model(int file_desc)
+{
+   int i=0;
+   unsigned p[32];
+   p[i++] = 0; // size
+   p[i++] = 0x00000000; // process request
+
+   p[i++] = 0x10001; // (the tag id)
+   p[i++] = 4; // (size of the buffer)
+   p[i++] = 0; // (size of the data)
+   p[i++] = 0; // response buffer
+
+   p[i++] = 0x00000000; // end tag
+   p[0] = i*sizeof *p; // actual size
+   
+   mbox_property(file_desc, p);
+   return p[5];
+}
+
+unsigned get_board_revision(int file_desc)
+{
+   int i=0;
+   unsigned p[32];
+   p[i++] = 0; // size
+   p[i++] = 0x00000000; // process request
+
+   p[i++] = 0x10002; // (the tag id)
+   p[i++] = 4; // (size of the buffer)
+   p[i++] = 0; // (size of the data)
+   p[i++] = 0; // response buffer
+
+   p[i++] = 0x00000000; // end tag
+   p[0] = i*sizeof *p; // actual size
+   
+   mbox_property(file_desc, p);
+//    printf("get_board_revision mbox response buffer:\n");
+//    int pi = 0;
+//    int length = p[0]/sizeof *p;
+//   for (; pi < length; pi++) {
+//        printf("%d: %#x\n", pi, p[pi]);
+//   }
+   return p[5];
+}
+
+unsigned get_dma_channels(int file_desc)
+{
+   int i=0;
+   unsigned p[32];
+   p[i++] = 0; // size
+   p[i++] = 0x00000000; // process request
+
+   p[i++] = 0x60001; // (the tag id)
+   p[i++] = 4; // (size of the buffer)
+   p[i++] = 0; // (size of the data)
+   p[i++] = 0; // response buffer
+
+   p[i++] = 0x00000000; // end tag
+   p[0] = i*sizeof *p; // actual size
+   
+   mbox_property(file_desc, p);
+   return p[5];
 }
