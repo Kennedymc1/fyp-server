@@ -8,12 +8,13 @@ var path = require('path');
 var spawn = require('child_process').spawn;
 const { exec } = require('child_process');
 var gpio = require('rpi-gpio');
+const { default: axios } = require('axios');
 
 let cameraRunning = false
 
 var proc;
 
-const productionUrl = 'http://ec2-18-188-141-169.us-east-2.compute.amazonaws.com/'
+const productionUrl = 'http://ec2-18-188-141-169.us-east-2.compute.amazonaws.com'
 
 // const devUrl = 'http://localhost:4001'
 
@@ -40,7 +41,7 @@ fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
         if (err) return
         if (cameraRunning) {
 
-            axios.post('/image-upload', {
+            axios.post(productionUrl + '/image-upload', {
                 image: data,
             }).then(function (response) {
                 console.log("image emitted")
