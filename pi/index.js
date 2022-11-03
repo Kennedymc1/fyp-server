@@ -48,7 +48,7 @@ fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
             }
         };
 
-        console.log("fsdfs")
+        // console.log("file changed")
 
         axios.post(productionUrl + '/image-upload', form, request_config)
             .then(function (response) {
