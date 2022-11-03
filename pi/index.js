@@ -121,9 +121,10 @@ gpio.on('change', function (channel, value) {
 // var direction = 1;
 let di = true
 setInterval(() => {
-    console.log("interval")
+    console.log("interval " + di)
+
     // pass the GPIO number
-    var sv1 = new PiServo(11);
+    var sv1 = new PiServo(26);
 
     sv1.open().then(function () {
         console.log("run servo")
@@ -141,4 +142,4 @@ setInterval(() => {
     // } else if (curAngle <= 0) {
     //     direction = 1;
     // }
-}, 1000);
+}, 5000);
