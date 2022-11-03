@@ -5,7 +5,8 @@ var app = express();
 var fs = require('fs');
 var path = require('path');
 const FormData = require('form-data'); // npm install --save form-data
-var piblaster = require('pi-servo-blaster.js');
+// var piblaster = require('pi-servo-blaster.js');
+var PiServo = require('pi-servo');
 
 var spawn = require('child_process').spawn;
 const { exec } = require('child_process');
@@ -111,21 +112,32 @@ gpio.on('change', function (channel, value) {
 });
 
 
-function angleToPercent(angle) {
-    return Math.floor((angle / 180) * 100);
-}
+// function angleToPercent(angle) {
+//     return Math.floor((angle / 180) * 100);
+// }
 
 
-var curAngle = 0;
-var direction = 1;
+// var curAngle = 0;
+// var direction = 1;
+let di = true
 setInterval(() => {
-    piblaster.setServoPwm("P1-11", angleToPercent(curAngle) + "%");
-    console.log("Setting angle at: ", curAngle, angleToPercent(curAngle));
-    curAngle += direction;
-    // Change direction when it exceeds the max angle.
-    if (curAngle >= 180) {
-        direction = -1;
-    } else if (curAngle <= 0) {
-        direction = 1;
-    }
+
+    // pass the GPIO number
+    var sv1 = new PiServo(11);
+
+    sv1.open().then(function () {
+        sv1.setDegree(di ? 90 : 0); // 0 - 180
+    });
+
+    di = !di
+
+    // piblaster.setServoPwm("P1-11", angleToPercent(curAngle) + "%");
+    // console.log("Setting angle at: ", curAngle, angleToPercent(curAngle));
+    // curAngle += direction;
+    // // Change direction when it exceeds the max angle.
+    // if (curAngle >= 180) {
+    //     direction = -1;
+    // } else if (curAngle <= 0) {
+    //     direction = 1;
+    // }
 }, 1000);
