@@ -121,11 +121,12 @@ gpio.on('change', function (channel, value) {
 // var direction = 1;
 let di = true
 setInterval(() => {
-
+    console.log("interval")
     // pass the GPIO number
     var sv1 = new PiServo(11);
 
     sv1.open().then(function () {
+        console.log("run servo")
         sv1.setDegree(di ? 90 : 0); // 0 - 180
     });
 
