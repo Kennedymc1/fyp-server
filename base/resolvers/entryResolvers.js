@@ -17,7 +17,12 @@ module.exports = {
                 _id: entryResponse._id,
                 time,
                 image: entryResponse.image,
-                temperature: entryResponse.temperature
+                temperature: entryResponse.temperature,
+                banned: entryResponse.banned,
+                age: entryResponse.age,
+                gender: entryResponse.gender
+
+
 
             }
         },
@@ -31,9 +36,20 @@ module.exports = {
                 return {
                     _id: entry._id,
                     time,
-                    image: entry.image
+                    image: entry.image,
+                    banned: entry.banned
                 }
             })
+        },
+    },
+    Mutation: {
+        banEntry: async (_, { id, banned }, context) => {
+            const success = await EntryModel.findByIdAndUpdate(id, { banned })
+            if (success) {
+                return true
+            } else {
+                return false
+            }
         },
     }
 };

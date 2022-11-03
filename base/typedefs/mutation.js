@@ -10,5 +10,7 @@ module.exports = gql`
     resetPassword(email: String): Int
     changeTokenPassword(token: String, password: String): User
     logout: Boolean
+    
+    banEntry(id: String,banned: Boolean): Boolean
   }
 `;

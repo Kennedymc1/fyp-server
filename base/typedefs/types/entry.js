@@ -7,6 +7,9 @@ module.exports = gql`
       time: String
       image: File
       temperature: String
+      banned: Boolean
+      age: String
+      gender: String
    }
 
 `

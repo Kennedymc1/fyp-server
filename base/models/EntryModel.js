@@ -6,7 +6,11 @@ const schema = mongoose.Schema({
 		data: String,
 		contentType: String
 	},
-	temperature: String
+	temperature: String,
+	banned: Boolean,
+	age: String,
+	gender: String
+
 });
 
 const model = mongoose.model('entries', schema);
