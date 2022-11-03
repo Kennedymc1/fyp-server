@@ -11,7 +11,7 @@ const { exec } = require('child_process');
 var gpio = require('rpi-gpio');
 const axios = require('axios');
 
-let cameraRunning = true
+let cameraRunning = false
 
 var proc;
 
@@ -25,7 +25,7 @@ const socket = io(serverUrl)
 app.listen(3001, () => console.log(`server listening on port 3001`))
 
 
-// exec('fswebcam -c ./webcam.conf');
+exec('fswebcam -c ./webcam.conf');
 
 
 const imagePath = "./stream/image_stream.jpg"
