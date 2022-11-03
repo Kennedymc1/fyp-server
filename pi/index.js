@@ -4,13 +4,14 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var path = require('path');
+const FormData = require('form-data'); // npm install --save form-data
 
 var spawn = require('child_process').spawn;
 const { exec } = require('child_process');
 var gpio = require('rpi-gpio');
-const { default: axios } = require('axios');
+const axios = require('axios');
 
-let cameraRunning = false
+let cameraRunning = true
 
 var proc;
 
@@ -24,7 +25,7 @@ const socket = io(serverUrl)
 app.listen(3001, () => console.log(`server listening on port 3001`))
 
 
-exec('fswebcam -c ./webcam.conf');
+// exec('fswebcam -c ./webcam.conf');
 
 
 const imagePath = "./stream/image_stream.jpg"
@@ -37,21 +38,27 @@ app.set('watchingFile', true);
 
 
 fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
-    fs.readFile(imagePath, (err, data) => {
-        if (err) return
-        if (cameraRunning) {
+    if (cameraRunning) {
+        const form = new FormData();
+        form.append('file', fs.createReadStream(imagePath));
 
-            axios.post(productionUrl + '/image-upload', {
-                image: data,
-            }).then(function (response) {
+        const request_config = {
+            headers: {
+                ...form.getHeaders()
+            }
+        };
+
+        console.log("fsdfs")
+
+        axios.post(productionUrl + '/image-upload', form, request_config)
+            .then(function (response) {
                 console.log("image emitted")
             })
-                .catch(function (error) {
-                    console.log({ error });
-                });
-        }
-    });
+            .catch(function (error) {
+                console.log({ error });
+            });;
 
+    }
 })
 
 
