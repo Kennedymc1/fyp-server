@@ -128,4 +128,4 @@ setInterval(() => {
     } else if (curAngle <= 0) {
         direction = 1;
     }
-}, 10);
+}, 1000);
