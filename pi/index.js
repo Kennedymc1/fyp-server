@@ -18,7 +18,7 @@ const productionUrl = 'http://ec2-18-188-141-169.us-east-2.compute.amazonaws.com
 // const devUrl = 'http://localhost:4001'
 
 const serverUrl = productionUrl
-const socket = io(serverUrl)
+global.socket = io(serverUrl)
 
 app.listen(3001, () => console.log(`server listening on port 3001`))
 
@@ -39,8 +39,7 @@ fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
     fs.readFile(imagePath, (err, data) => {
         if (err) return
         if (cameraRunning) {
-            const socket = io(serverUrl)
-            socket.emit('liveStream', data)
+            global.socket.emit('liveStream', data)
             console.log("image emitted")
         }
     });
@@ -58,7 +57,7 @@ gpio.setup(GREEN_LED_PIN, gpio.DIR_OUT)
 gpio.setup(RED_LED_PIN, gpio.DIR_OUT)
 
 
-socket.on("approved", (data) => {
+global.socket.on("approved", (data) => {
     console.log({ data })
     gpio.write(GREEN_LED_PIN, true)
     cameraRunning = false
@@ -69,7 +68,7 @@ socket.on("approved", (data) => {
     }, 5000)
 })
 
-socket.on("denied", (data) => {
+global.socket.on("denied", (data) => {
     console.log({ data })
     gpio.write(RED_LED_PIN, true)
     cameraRunning = false
