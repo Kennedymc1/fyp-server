@@ -39,6 +39,7 @@ fs.watchFile(imagePath, { interval: 500 }, function (current, previous) {
     fs.readFile(imagePath, (err, data) => {
         if (err) return
         if (cameraRunning) {
+            const socket = io(serverUrl)
             socket.emit('liveStream', data)
             console.log("image emitted")
         }
