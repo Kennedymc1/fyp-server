@@ -69,7 +69,7 @@ const BUTTON_PIN = 12
 const GREEN_LED_PIN = 38
 const RED_LED_PIN = 40
 gpio.setup(BUTTON_PIN, gpio.DIR_IN, gpio.EDGE_BOTH)
-gpio.setup(16, gpio.DIR_IN, gpio.EDGE_BOTH)
+gpio.setup(7, gpio.DIR_IN, gpio.EDGE_BOTH)
 
 // gpio.setup(ORANGE_LED_PIN, gpio.DIR_OUT)
 gpio.setup(GREEN_LED_PIN, gpio.DIR_OUT)
@@ -111,13 +111,13 @@ socket.on("denied", (data) => {
 
 
 gpio.on('change', function (channel, value) {
-    // console.log('Channel ' + channel + ' value is now ' + value);
+    console.log('Channel ' + channel + ' value is now ' + value);
     if (channel === 12 && value) {
         if (!cameraRunning) {
             console.log("camera set to true")
             cameraRunning = true
         }
-    } else if (channel === 16 && value) {
+    } else if (channel === 7 && value) {
         exec('python close-servo.py')
     }
 
