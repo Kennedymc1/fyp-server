@@ -117,7 +117,7 @@ gpio.on('change', function (channel, value) {
             console.log("camera set to true")
             cameraRunning = true
         }
-    } else if (channel === 7 && value) {
+    } else if (channel === 7) {
         exec('python close-servo.py')
     }
 
