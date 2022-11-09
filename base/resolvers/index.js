@@ -5,6 +5,8 @@ const { userResolvers } = require('../libs/auth');
 const statsResolvers = require('./statsResolvers');
 const entryResolvers = require('./entryResolvers');
 const imageResolvers = require('./imageResolvers');
+const settingsResolvers = require('./settingsResolvers');
+
 
 
 
@@ -18,5 +20,6 @@ module.exports = [
     sensorsResolvers,
     statsResolvers,
     entryResolvers,
-    imageResolvers
+    imageResolvers,
+    settingsResolvers
 ];

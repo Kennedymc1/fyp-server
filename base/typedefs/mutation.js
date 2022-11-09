@@ -12,5 +12,6 @@ module.exports = gql`
     logout: Boolean
     
     banEntry(id: String,banned: Boolean): Boolean
+    setSettings(settings: SettingsInput): Boolean
   }
 `;

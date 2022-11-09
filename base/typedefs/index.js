@@ -7,6 +7,7 @@ const stat = require("./types/stat");
 const entry = require("./types/entry");
 const file = require("./types/file");
 
+const settings = require("./types/settings");
 
 
 
@@ -30,5 +31,6 @@ module.exports = [
    chart,
    stat,
    entry,
-   file
+   file,
+   settings
 ];

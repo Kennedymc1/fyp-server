@@ -86,7 +86,7 @@ socket.on("approved", (data) => {
         gpio.write(GREEN_LED_PIN, false)
         console.log("turned off green LED")
 
-        exec('python close-servo.py')
+        // exec('python close-servo.py')
         console.log('close')
 
     }, 5000)
@@ -115,7 +115,10 @@ gpio.on('change', function (channel, value) {
             console.log("camera set to true")
             cameraRunning = true
         }
+    } else if (channel === 16 && value) {
+        exec('python close-servo.py')
     }
+
 });
 
 

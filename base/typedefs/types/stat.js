@@ -6,7 +6,7 @@ module.exports = gql`
       peopleToday: Int,
       peopleYesterday: Int,
       people7Days: Int,
-      people30Days: Int
+      people30Days: Int,
    }
 
 `

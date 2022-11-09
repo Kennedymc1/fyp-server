@@ -13,6 +13,9 @@ module.exports = gql`
     time: [Record]
     image: File
     entry(id: String): Entry
+    settings: Settings
+    customRange(fromDate: String,toDate: String): Int
+    
   }
 `;
 
