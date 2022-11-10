@@ -68,8 +68,10 @@ const BUTTON_PIN = 12
 // const ORANGE_LED_PIN = 0
 const GREEN_LED_PIN = 38
 const RED_LED_PIN = 40
+const OPEN_DOOR = 3
 gpio.setup(BUTTON_PIN, gpio.DIR_IN, gpio.EDGE_BOTH)
 gpio.setup(7, gpio.DIR_IN, gpio.EDGE_BOTH)
+gpio.setup(OPEN_DOOR, gpio.DIR_IN, gpio.EDGE_BOTH)
 
 // gpio.setup(ORANGE_LED_PIN, gpio.DIR_OUT)
 gpio.setup(GREEN_LED_PIN, gpio.DIR_OUT)
@@ -119,6 +121,8 @@ gpio.on('change', function (channel, value) {
         }
     } else if (channel === 7 && !value) {
         exec('python close-servo.py')
+    } else if (channel === OPEN_DOOR) {
+        exec('python open-servo.py')
     }
 
 });
