@@ -5,7 +5,7 @@ module.exports = gql`
    type Entry{
       _id: String
       time: String
-      image: File
+      image: String
       temperature: String
       banned: Boolean
       age: String
