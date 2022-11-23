@@ -9,7 +9,7 @@ module.exports = gql`
     records: [Record]
     charts: Chart
     stats: Stat
-    entries: [Entry]
+    entries(fromDate: String,toDate: String): [Entry]
     time: [Record]
     image: File
     entry(id: String): Entry

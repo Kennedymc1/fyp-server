@@ -4,7 +4,7 @@ const TimeModel = require("../models/TimeModel")
 const DateModel = require("../models/DateModel")
 const HumidityModel = require("../models/HumidityModel")
 const EntryModel = require("../models/EntryModel");
-const { dateCreated } = require("../utils/dateUtil");
+const { dateCreated, compareHours } = require("../utils/dateUtil");
 
 module.exports = {
     Query: {
@@ -27,8 +27,31 @@ module.exports = {
             }
         },
 
-        entries: async (_, __, context) => {
-            const entryResponse = await EntryModel.find().sort({ _id: "desc" });
+        entries: async (_, { fromDate, toDate }, context) => {
+            let entryResponse = await EntryModel.find().sort({ _id: "desc" });
+
+            if (fromDate && toDate) {
+                const toDateObj = new Date(toDate)
+                const fromDateObj = new Date(fromDate)
+                //add a day to the to date object
+                toDateObj.setDate(toDateObj.getDate() + 1);
+
+                const th = compareHours(toDateObj)
+                const fh = compareHours(fromDateObj)
+
+                const newEntries = []
+
+                entryResponse.map(entry => {
+                    var timestamp = entry._id.toString().substring(0, 8);
+                    var createdOn = new Date(parseInt(timestamp, 16) * 1000);
+
+                    if (createdOn >= fromDateObj && createdOn <= toDateObj) {
+                        newEntries.push(entry)
+                    }
+                })
+
+                entryResponse = newEntries
+            }
 
             return entryResponse.map(entry => {
                 const time = dateCreated(entry)
@@ -37,7 +60,9 @@ module.exports = {
                     _id: entry._id,
                     time,
                     image: entry.image,
-                    banned: entry.banned
+                    banned: entry.banned,
+                    age: entry.age,
+                    gender: entry.gender
                 }
             })
         },
