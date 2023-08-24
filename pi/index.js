@@ -32,7 +32,6 @@ exec('fswebcam -c ./webcam.conf');
 
 const imagePath = "./stream/image_stream.jpg"
 
-// exec('fswebcam -c ./webcam.conf');
 
 console.log('Watching for changes...');
 
@@ -105,11 +104,7 @@ socket.on("denied", (data) => {
         gpio.write(RED_LED_PIN, false)
         console.log("turned off red LED")
     }, 5000)
-
 })
-
-
-
 
 
 gpio.on('change', function (channel, value) {
